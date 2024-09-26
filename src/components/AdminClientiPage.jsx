@@ -6,7 +6,25 @@ const AdminClientiPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [sortby, setSortBy] = useState("ragioneSociale");
+
+  const [newCliente, setNewCliente] = useState({
+    ragioneSociale: "",
+    partitaIva: "",
+    email: "",
+    dataUltimoContatto: "",
+    fatturatoAnnuale: "",
+    pec: "",
+    telefono: "",
+    emailContatto: "",
+    nomeContatto: "",
+    cognomeContatto: "",
+    telefonoContatto: "",
+    tipologia: "PA",
+    indirizzoSedeLegale: "",
+    indirizzoSedeOperativa: "",
+  });
 
   const fetchClienti = async () => {
     try {
@@ -50,22 +68,7 @@ const AdminClientiPage = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ragioneSociale: selectedCliente.ragioneSociale,
-          partitaIva: selectedCliente.partitaIva,
-          email: selectedCliente.email,
-          dataUltimoContatto: selectedCliente.dataUltimoContatto,
-          fatturatoAnnuale: selectedCliente.fatturatoAnnuale,
-          pec: selectedCliente.pec,
-          telefono: selectedCliente.telefono,
-          emailContatto: selectedCliente.emailContatto,
-          nomeContatto: selectedCliente.nomeContatto,
-          cognomeContatto: selectedCliente.cognomeContatto,
-          telefonoContatto: selectedCliente.telefonoContatto,
-          tipologia: selectedCliente.tipologia,
-          indirizzoSedeLegale: selectedCliente.indirizzoSedeLegale,
-          indirizzoSedeOperativa: selectedCliente.indirizzoSedeOperativa,
-        }),
+        body: JSON.stringify(selectedCliente),
       });
 
       if (!response.ok) {
@@ -81,6 +84,33 @@ const AdminClientiPage = () => {
       setShowModal(false);
     } catch (error) {
       console.error("Errore durante la modifica del cliente:", error);
+    }
+  };
+
+  const handleCreateCliente = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch("http://localhost:3001/clienti/register", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCliente),
+      });
+
+      if (!response.ok) {
+        throw new Error("Errore durante la creazione del cliente");
+      }
+
+      const createdCliente = await response.json();
+      setClienti((prevClienti) => ({
+        ...prevClienti,
+        content: [...prevClienti.content, createdCliente],
+      }));
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error("Errore durante la creazione del cliente:", error);
     }
   };
 
@@ -124,7 +154,7 @@ const AdminClientiPage = () => {
       <Form.Group controlId="sortby">
         <Form.Label>Ordina per</Form.Label>
         <Form.Control as="select" value={sortby} onChange={handleSortChange}>
-          <option value="ragioneSociale">Nome</option>
+          <option value="ragioneSociale">Ragione Sociale</option>
           <option value="fatturatoAnnuale">Fatturato Annuale</option>
           <option value="dataInserimento">Data di Inserimento</option>
           <option value="dataUltimoContatto">Data di Ultimo Contatto</option>
@@ -141,6 +171,8 @@ const AdminClientiPage = () => {
               <th>Email</th>
               <th>Telefono</th>
               <th>Fatturato Annuale</th>
+              <th>Data Inserimento</th>
+              <th>Data Ultimo Contatto</th>
               <th>Azioni</th>
             </tr>
           </thead>
@@ -153,6 +185,8 @@ const AdminClientiPage = () => {
                   <td>{cliente.email}</td>
                   <td>{cliente.telefono}</td>
                   <td>{cliente.fatturatoAnnuale}</td>
+                  <td>{cliente.dataInserimento}</td>
+                  <td>{cliente.dataUltimoContatto}</td>
                   <td>
                     <Button variant="secondary" onClick={() => clienteSelect(cliente)}>
                       Modifica
@@ -323,7 +357,158 @@ const AdminClientiPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-      <Button>Aggiungi Cliente</Button>
+
+      <Button variant="success" onClick={() => setShowCreateModal(true)}>
+        Aggiungi Cliente
+      </Button>
+
+      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Crea Nuovo Cliente</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formRagioneSociale">
+              <Form.Label>Ragione Sociale</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.ragioneSociale}
+                onChange={(e) => setNewCliente({ ...newCliente, ragioneSociale: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formPartitaIva">
+              <Form.Label>Partita IVA</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.partitaIva}
+                onChange={(e) => setNewCliente({ ...newCliente, partitaIva: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formEmail">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                value={newCliente.email}
+                onChange={(e) => setNewCliente({ ...newCliente, email: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formDataUltimoContatto">
+              <Form.Label>Data Ultimo Contatto</Form.Label>
+              <Form.Control
+                type="date"
+                value={newCliente.dataUltimoContatto}
+                onChange={(e) => setNewCliente({ ...newCliente, dataUltimoContatto: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formFatturatoAnnuale">
+              <Form.Label>Fatturato Annuale</Form.Label>
+              <Form.Control
+                type="number"
+                value={newCliente.fatturatoAnnuale}
+                onChange={(e) => setNewCliente({ ...newCliente, fatturatoAnnuale: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formPec">
+              <Form.Label>PEC</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.pec}
+                onChange={(e) => setNewCliente({ ...newCliente, pec: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formTelefono">
+              <Form.Label>Telefono</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.telefono}
+                onChange={(e) => setNewCliente({ ...newCliente, telefono: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formEmailContatto">
+              <Form.Label>Email Contatto</Form.Label>
+              <Form.Control
+                type="email"
+                value={newCliente.emailContatto}
+                onChange={(e) => setNewCliente({ ...newCliente, emailContatto: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formNomeContatto">
+              <Form.Label>Nome Contatto</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.nomeContatto}
+                onChange={(e) => setNewCliente({ ...newCliente, nomeContatto: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formCognomeContatto">
+              <Form.Label>Cognome Contatto</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.cognomeContatto}
+                onChange={(e) => setNewCliente({ ...newCliente, cognomeContatto: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formTelefonoContatto">
+              <Form.Label>Telefono Contatto</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.telefonoContatto}
+                onChange={(e) => setNewCliente({ ...newCliente, telefonoContatto: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formTipologia">
+              <Form.Label>Tipologia</Form.Label>
+              <Form.Control
+                as="select"
+                value={newCliente.tipologia}
+                onChange={(e) => setNewCliente({ ...newCliente, tipologia: e.target.value })}
+              >
+                <option value="PA">PA</option>
+                <option value="SAS">SAS</option>
+                <option value="SPA">SPA</option>
+                <option value="SRL">SRL</option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="formIndirizzoSedeLegale">
+              <Form.Label>Indirizzo Sede Legale</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.indirizzoSedeLegale}
+                onChange={(e) => setNewCliente({ ...newCliente, indirizzoSedeLegale: e.target.value })}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formIndirizzoSedeOperativa">
+              <Form.Label>Indirizzo Sede Operativa</Form.Label>
+              <Form.Control
+                type="text"
+                value={newCliente.indirizzoSedeOperativa}
+                onChange={(e) => setNewCliente({ ...newCliente, indirizzoSedeOperativa: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreateModal(false)}>
+            Annulla
+          </Button>
+          <Button variant="primary" onClick={handleCreateCliente}>
+            Crea Cliente
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
