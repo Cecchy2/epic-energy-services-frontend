@@ -251,15 +251,6 @@ const AdminClientiPage = () => {
                 />
               </Form.Group>
 
-              <Form.Group controlId="formFatturatoAnnuale">
-                <Form.Label>Fatturato Annuale</Form.Label>
-                <Form.Control
-                  type="number"
-                  value={selectedCliente.fatturatoAnnuale}
-                  onChange={(e) => setSelectedCliente({ ...selectedCliente, fatturatoAnnuale: e.target.value })}
-                />
-              </Form.Group>
-
               <Form.Group controlId="formPec">
                 <Form.Label>PEC</Form.Label>
                 <Form.Control
@@ -403,16 +394,6 @@ const AdminClientiPage = () => {
                 onChange={(e) => setNewCliente({ ...newCliente, dataUltimoContatto: e.target.value })}
               />
             </Form.Group>
-
-            <Form.Group controlId="formFatturatoAnnuale">
-              <Form.Label>Fatturato Annuale</Form.Label>
-              <Form.Control
-                type="number"
-                value={newCliente.fatturatoAnnuale}
-                onChange={(e) => setNewCliente({ ...newCliente, fatturatoAnnuale: e.target.value })}
-              />
-            </Form.Group>
-
             <Form.Group controlId="formPec">
               <Form.Label>PEC</Form.Label>
               <Form.Control
