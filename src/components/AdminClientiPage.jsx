@@ -6,6 +6,7 @@ const AdminClientiPage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [sortby, setSortBy] = useState("ragioneSociale");
 
   const fetchClienti = async () => {
     try {
@@ -14,7 +15,7 @@ const AdminClientiPage = () => {
         throw new Error("Token non trovato nel localStorage");
       }
 
-      const response = await fetch("http://localhost:3001/clienti", {
+      const response = await fetch(`http://localhost:3001/clienti?sortby=${sortby}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -110,11 +111,26 @@ const AdminClientiPage = () => {
 
   useEffect(() => {
     fetchClienti();
-  }, []);
+  }, [sortby]);
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+  };
 
   return (
     <div>
       <h1 className="mt-5">Gestisci Clienti</h1>
+
+      <Form.Group controlId="sortby">
+        <Form.Label>Ordina per</Form.Label>
+        <Form.Control as="select" value={sortby} onChange={handleSortChange}>
+          <option value="ragioneSociale">Nome</option>
+          <option value="fatturatoAnnuale">Fatturato Annuale</option>
+          <option value="dataInserimento">Data di Inserimento</option>
+          <option value="dataUltimoContatto">Data di Ultimo Contatto</option>
+        </Form.Control>
+      </Form.Group>
+
       {errorMessage && <p className="text-danger">{errorMessage}</p>}
       {clienti ? (
         <Table striped bordered hover>
