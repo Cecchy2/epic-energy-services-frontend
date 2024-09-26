@@ -6,24 +6,31 @@ const AdminFatturePage = () => {
 
   const fetchFatture = async () => {
     try {
-      const token = localStorage.getItem("authToken");
-      console.log("Token " + token);
+      const token = localStorage.getItem("authToken"); // Ottieni il token dal localStorage
+      if (!token) {
+        throw new Error("Token non trovato nel localStorage");
+      }
+
+      console.log("Token recuperato:", token); // Log del token per debug
+
       const resp = await fetch("http://localhost:3001/fatture", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Invia il token nell'header
           "Content-Type": "application/json",
         },
       });
+
       if (resp.ok) {
         const data = await resp.json();
         console.log(data);
         setFatture(data);
       } else {
-        throw new Error("Errore nel recupero delle fatture");
+        const errorMessage = await resp.text();
+        throw new Error(`Errore nel recupero delle fatture: ${errorMessage}`);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -37,7 +44,7 @@ const AdminFatturePage = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Numero Fatture</th>
+            <th>Numero Fattura</th>
             <th>Cliente</th>
             <th>Stato</th>
             <th>Data Fattura</th>
