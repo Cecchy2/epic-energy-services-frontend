@@ -9,6 +9,7 @@ import Home from "./components/Home";
 import Registrazione from "./components/Registrazione";
 import UserPage from "./components/UserPage";
 import AdminHomePage from "./components/AdminHomePage";
+import AdminClientiPage from "./components/AdminClientiPage";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminHomePage />} />
             <Route path="/adminfatturepage" element={<AdminFatturePage />} />
+            <Route path="/adminClientiPage" element={<AdminClientiPage />} />
           </Routes>
         </Container>
       </BrowserRouter>
