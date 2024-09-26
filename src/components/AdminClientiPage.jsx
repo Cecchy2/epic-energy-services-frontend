@@ -49,7 +49,22 @@ const AdminClientiPage = () => {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(selectedCliente),
+        body: JSON.stringify({
+          ragioneSociale: selectedCliente.ragioneSociale,
+          partitaIva: selectedCliente.partitaIva,
+          email: selectedCliente.email,
+          dataUltimoContatto: selectedCliente.dataUltimoContatto,
+          fatturatoAnnuale: selectedCliente.fatturatoAnnuale,
+          pec: selectedCliente.pec,
+          telefono: selectedCliente.telefono,
+          emailContatto: selectedCliente.emailContatto,
+          nomeContatto: selectedCliente.nomeContatto,
+          cognomeContatto: selectedCliente.cognomeContatto,
+          telefonoContatto: selectedCliente.telefonoContatto,
+          tipologia: selectedCliente.tipologia,
+          indirizzoSedeLegale: selectedCliente.indirizzoSedeLegale,
+          indirizzoSedeOperativa: selectedCliente.indirizzoSedeOperativa,
+        }),
       });
 
       if (!response.ok) {
@@ -58,12 +73,13 @@ const AdminClientiPage = () => {
 
       const updatedCliente = await response.json();
 
-      setClienti((prevClienti) =>
-        prevClienti.content.map((cliente) => (cliente.id === updatedCliente.id ? updatedCliente : cliente))
-      );
+      setClienti((prevClienti) => ({
+        ...prevClienti,
+        content: prevClienti.content.map((cliente) => (cliente.id === updatedCliente.id ? updatedCliente : cliente)),
+      }));
       setShowModal(false);
     } catch (error) {
-      console.error("Errore durante la modifica:", error);
+      console.error("Errore durante la modifica del cliente:", error);
     }
   };
 
@@ -98,7 +114,7 @@ const AdminClientiPage = () => {
 
   return (
     <div>
-      <h1>Gestisci Clienti</h1>
+      <h1 className="mt-5">Gestisci Clienti</h1>
       {errorMessage && <p className="text-danger">{errorMessage}</p>}
       {clienti ? (
         <Table striped bordered hover>
@@ -176,12 +192,107 @@ const AdminClientiPage = () => {
                 />
               </Form.Group>
 
+              <Form.Group controlId="formDataUltimoContatto">
+                <Form.Label>Data Ultimo Contatto</Form.Label>
+                <Form.Control
+                  type="date"
+                  value={selectedCliente.dataUltimoContatto}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, dataUltimoContatto: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formFatturatoAnnuale">
+                <Form.Label>Fatturato Annuale</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={selectedCliente.fatturatoAnnuale}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, fatturatoAnnuale: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formPec">
+                <Form.Label>PEC</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={selectedCliente.pec}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, pec: e.target.value })}
+                />
+              </Form.Group>
+
               <Form.Group controlId="formTelefono">
                 <Form.Label>Telefono</Form.Label>
                 <Form.Control
                   type="text"
                   value={selectedCliente.telefono}
                   onChange={(e) => setSelectedCliente({ ...selectedCliente, telefono: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formEmailContatto">
+                <Form.Label>Email Contatto</Form.Label>
+                <Form.Control
+                  type="email"
+                  value={selectedCliente.emailContatto}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, emailContatto: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formNomeContatto">
+                <Form.Label>Nome Contatto</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={selectedCliente.nomeContatto}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, nomeContatto: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formCognomeContatto">
+                <Form.Label>Cognome Contatto</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={selectedCliente.cognomeContatto}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, cognomeContatto: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formTelefonoContatto">
+                <Form.Label>Telefono Contatto</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={selectedCliente.telefonoContatto}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, telefonoContatto: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formTipologia">
+                <Form.Label>Tipologia</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={selectedCliente.tipologia}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, tipologia: e.target.value })}
+                >
+                  <option value="PA">PA</option>
+                  <option value="SAS">SAS</option>
+                  <option value="SPA">SPA</option>
+                  <option value="SRL">SRL</option>
+                </Form.Control>
+              </Form.Group>
+
+              <Form.Group controlId="formIndirizzoSedeLegale">
+                <Form.Label>Indirizzo Sede Legale</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={selectedCliente.indirizzoSedeLegale}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, indirizzoSedeLegale: e.target.value })}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="formIndirizzoSedeOperativa">
+                <Form.Label>Indirizzo Sede Operativa</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={selectedCliente.indirizzoSedeOperativa}
+                  onChange={(e) => setSelectedCliente({ ...selectedCliente, indirizzoSedeOperativa: e.target.value })}
                 />
               </Form.Group>
             </Form>
@@ -196,6 +307,7 @@ const AdminClientiPage = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <Button>Aggiungi Cliente</Button>
     </div>
   );
 };

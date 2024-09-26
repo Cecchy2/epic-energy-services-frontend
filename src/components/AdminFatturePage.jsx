@@ -136,6 +136,7 @@ const AdminFatturePage = () => {
 
   return (
     <div>
+      <h1 className="mt-5">Gestisci Fatture</h1>
       {errorMessage && <p className="text-danger">{errorMessage}</p>}
       {fatture ? (
         <Table striped bordered hover>
