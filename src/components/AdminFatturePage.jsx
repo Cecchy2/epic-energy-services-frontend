@@ -72,6 +72,31 @@ const AdminFatturePage = () => {
     setShowModal(true);
   };
 
+  const DeleteFattura = async (fatturaId) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(`http://localhost:3001/fatture/${fatturaId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Errore durante l'eliminazione della fattura");
+      }
+
+      setFatture((prevFatture) => ({
+        ...prevFatture,
+        content: prevFatture.content.filter((fattura) => fattura.id !== fatturaId),
+      }));
+      console.log(`Fattura con ID ${fatturaId} eliminata correttamente.`);
+    } catch (error) {
+      console.error("Errore durante l'eliminazione:", error);
+    }
+  };
+
   const handleSaveChanges = async () => {
     try {
       const token = localStorage.getItem("authToken");
@@ -111,7 +136,6 @@ const AdminFatturePage = () => {
 
   return (
     <div>
-      <Button variant="secondary">scelta</Button>
       {errorMessage && <p className="text-danger">{errorMessage}</p>}
       {fatture ? (
         <Table striped bordered hover>
@@ -138,7 +162,9 @@ const AdminFatturePage = () => {
                     <Button variant="secondary" onClick={() => fatturaSelect(fattura)}>
                       Modifica
                     </Button>
-                    <Button variant="secondary">Elimina</Button>
+                    <Button variant="secondary" onClick={() => DeleteFattura(fattura.id)}>
+                      Elimina
+                    </Button>
                   </td>
                 </tr>
               ))

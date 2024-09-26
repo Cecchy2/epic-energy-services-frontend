@@ -5,6 +5,10 @@ import MyNavbar from "./components/MyNavbar";
 import Login from "./components/Login";
 import AdminFatturePage from "./components/AdminFatturePage";
 import { Container } from "react-bootstrap";
+import Home from "./components/Home";
+import Registrazione from "./components/Registrazione";
+import UserPage from "./components/UserPage";
+import AdminHomePage from "./components/AdminHomePage";
 
 function App() {
   return (
@@ -13,9 +17,12 @@ function App() {
         <MyNavbar />
         <Container>
           <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/admin" element={<AdminFatturePage />} />
-            {/* <Route path="/user" element={<AdminFatturePage />} /> */}
+            <Route path="/" element={<Home />} />
+            <Route path="/user" element={<UserPage />} />
+            <Route path="/register" element={<Registrazione />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin" element={<AdminHomePage />} />
+            <Route path="/adminfatturepage" element={<AdminFatturePage />} />
           </Routes>
         </Container>
       </BrowserRouter>
