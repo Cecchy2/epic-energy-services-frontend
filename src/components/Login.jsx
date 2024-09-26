@@ -25,14 +25,19 @@ const Login = () => {
       }
 
       const data = await response.json();
+      console.log("Dati ricevuti:", data);
 
-      localStorage.setItem("authToken", data.token);
-      console.log("Login successful, token saved:", data.token);
+      if (data.accessToken) {
+        localStorage.setItem("authToken", data.accessToken);
+        console.log("Login successful, token saved:", data.accessToken);
 
-      if (data.role === "ADMIN") {
-        navigate("/admin");
+        if (data.role === "ADMIN") {
+          navigate("/admin");
+        } else {
+          navigate("/user");
+        }
       } else {
-        navigate("/user-dashboard");
+        throw new Error("Token non ricevuto dalla risposta");
       }
     } catch (error) {
       setErrorMessage("Login failed. Please check your credentials.");
@@ -41,8 +46,8 @@ const Login = () => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center vh-100">
-      <Row className="w-75">
+    <Container className="d-flex justify-content-center align-items-center mt-5">
+      <Row className="w-75 mt-5">
         <Col md={6} className="mx-auto">
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3" controlId="formBasicEmail">
