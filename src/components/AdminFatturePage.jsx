@@ -6,6 +6,13 @@ const AdminFatturePage = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedFattura, setSelectedFattura] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newFattura, setNewFattura] = useState({
+    dataFattura: "",
+    importo: "",
+    statoFattura: "",
+    clienteId: "",
+  });
 
   const handleUpdateStatoFattura = async () => {
     try {
@@ -127,6 +134,33 @@ const AdminFatturePage = () => {
       setShowModal(false);
     } catch (error) {
       console.error("Errore durante la modifica:", error);
+    }
+  };
+
+  const handleCreateFattura = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch("http://localhost:3001/fatture", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newFattura),
+      });
+
+      if (!response.ok) {
+        throw new Error("Errore durante la creazione della fattura");
+      }
+
+      const createdFattura = await response.json();
+      setFatture((prevFatture) => ({
+        ...prevFatture,
+        content: [...prevFatture.content, createdFattura],
+      }));
+      setShowCreateModal(false);
+    } catch (error) {
+      console.error("Errore durante la creazione della fattura:", error);
     }
   };
 
@@ -256,6 +290,65 @@ const AdminFatturePage = () => {
           </Button>
           <Button variant="primary" onClick={handleUpdateStatoFattura}>
             Salva stato
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Button variant="success" onClick={() => setShowCreateModal(true)}>
+        Aggiungi Fattura
+      </Button>
+
+      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Crea Nuova Fattura</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formRagioneSociale">
+              <Form.Label>Data Fattura</Form.Label>
+              <Form.Control
+                type="date"
+                value={newFattura.dataFattura}
+                onChange={(e) => setNewFattura({ ...newFattura, dataFattura: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formRagioneSociale">
+              <Form.Label>Importo</Form.Label>
+              <Form.Control
+                type="text"
+                value={newFattura.importo}
+                onChange={(e) => setNewFattura({ ...newFattura, importo: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group controlId="formRagioneSociale">
+              <Form.Label>Stato Fattura</Form.Label>
+              <Form.Control
+                as="select"
+                value={newFattura.statoFattura}
+                onChange={(e) => setNewFattura({ ...newFattura, statoFattura: e.target.value })}
+              >
+                <option value="INVIATA">INVIATA</option>
+                <option value="PAGATA">PAGATA</option>
+                <option value="SCADUTA">SCADUTA</option>
+                <option value="ANNULLATA">ANNULLATA</option>
+                <option value="RIMBORSATA">RIMBORSATA</option>
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="formRagioneSociale">
+              <Form.Label>Cliente Id</Form.Label>
+              <Form.Control
+                type="text"
+                value={newFattura.clienteId}
+                onChange={(e) => setNewFattura({ ...newFattura, clienteId: e.target.value })}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowCreateModal(false)}>
+            Annulla
+          </Button>
+          <Button variant="primary" onClick={handleCreateFattura}>
+            Crea Fattura
           </Button>
         </Modal.Footer>
       </Modal>

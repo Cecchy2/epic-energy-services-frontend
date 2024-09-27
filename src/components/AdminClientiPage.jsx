@@ -8,7 +8,6 @@ const AdminClientiPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [sortby, setSortBy] = useState("ragioneSociale");
-
   const [newCliente, setNewCliente] = useState({
     ragioneSociale: "",
     partitaIva: "",
