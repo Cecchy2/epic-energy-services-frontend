@@ -118,8 +118,8 @@ const UserPage = () => {
         src={user.avatar || "https://ui-avatars.com/api/?name=Mireya+Brakus"}
         alt="avatar"
         className="mt-5 mb-3"
-        width={300}
-        height={300}
+        fluid
+        style={{ maxWidth: "300px", height: "auto" }}
       />
       <h2 className="mb-3">
         {user.nome} {user.cognome}
