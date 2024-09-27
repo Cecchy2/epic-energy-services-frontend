@@ -194,10 +194,10 @@ const AdminFatturePage = () => {
                   <td>{fattura.dataFattura}</td>
                   <td>{fattura.importo}</td>
                   <td>
-                    <Button variant="secondary" onClick={() => fatturaSelect(fattura)}>
+                    <Button variant="warning" onClick={() => fatturaSelect(fattura)}>
                       Modifica
                     </Button>
-                    <Button variant="secondary" onClick={() => DeleteFattura(fattura.id)}>
+                    <Button variant="danger" onClick={() => DeleteFattura(fattura.id)}>
                       Elimina
                     </Button>
                   </td>

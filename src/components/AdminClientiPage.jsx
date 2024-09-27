@@ -187,7 +187,7 @@ const AdminClientiPage = () => {
                   <td>{cliente.dataInserimento}</td>
                   <td>{cliente.dataUltimoContatto}</td>
                   <td>
-                    <Button variant="secondary" onClick={() => clienteSelect(cliente)}>
+                    <Button variant="warning" onClick={() => clienteSelect(cliente)}>
                       Modifica
                     </Button>
                     <Button variant="danger" onClick={() => DeleteCliente(cliente.id)}>
