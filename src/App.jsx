@@ -19,7 +19,7 @@ function App() {
         <Container>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/user" element={<UserPage />} />
+            <Route path="/utenti/:userId" element={<UserPage />} />
             <Route path="/register" element={<Registrazione />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<AdminHomePage />} />

@@ -25,16 +25,16 @@ const Login = () => {
       }
 
       const data = await response.json();
-      console.log("Dati ricevuti:", data);
 
       if (data.accessToken) {
         localStorage.setItem("authToken", data.accessToken);
+        localStorage.setItem("userId", data.utenteId);
         console.log("Login successful, token saved:", data.accessToken);
 
         if (data.role === "ADMIN") {
           navigate("/admin");
         } else {
-          navigate("/user");
+          navigate(`/utenti/${data.utenteId}`);
         }
       } else {
         throw new Error("Token non ricevuto dalla risposta");

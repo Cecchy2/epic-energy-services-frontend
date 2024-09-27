@@ -15,7 +15,7 @@ const AdminHomePage = () => {
   return (
     <div>
       <h1 className="mt-4 text-center">Pagina Gestione Amministratore</h1>
-      <div className="text-center mt-4">
+      <div className="text-center">
         <h4 className="mt-5">Gestisci Fatture</h4>
         <Button variant="info" onClick={fatturePage}>
           Vai alla gestione delle fatture
